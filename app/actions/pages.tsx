@@ -125,7 +125,6 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
             >
               <h2 class={styles.heading}>{inviteeNames(invitation)}</h2>
               <div class={styles.body}>Confirma tu asistencia</div>
-              {answered ? <div class={styles.label}>{answerSummary(invitation)}</div> : null}
               {compact ? (
                 <div class={styles.stack12}>
                   <div class={styles.label}>¿Cuántos asistirán?</div>
