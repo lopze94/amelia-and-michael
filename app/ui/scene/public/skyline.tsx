@@ -15,6 +15,7 @@ export const Skyline = clientEntry(import.meta.url, function Skyline() {
         />
       </div>
       <div class={styles.ground} />
+      <div class={styles.cover} />
     </>
   )
 })

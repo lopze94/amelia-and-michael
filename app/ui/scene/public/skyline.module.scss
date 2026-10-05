@@ -48,3 +48,13 @@
   height: 1px;
   background: $rule;
 }
+
+// Solid cover below the ground line, hiding anything that scrolls behind it.
+.cover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22vh;
+  background: $paper;
+}
