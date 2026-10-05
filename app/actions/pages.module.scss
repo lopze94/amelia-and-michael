@@ -121,21 +121,6 @@
   width: 100%;
 }
 
-.name {
-  width: 100%;
-  max-width: 360px;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 1px solid $rule-input;
-  background: transparent;
-  padding: 10px 4px;
-  font-family: $serif;
-  font-size: 20px;
-  color: $ink;
-  text-align: center;
-  outline: none;
-}
-
 .choices {
   display: flex;
   gap: 10px;
@@ -170,6 +155,23 @@
   }
 }
 
+.numbers {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+// Same radio-as-button pattern as .choice, but a compact square for a single digit.
+.number {
+  @extend .choice;
+
+  span {
+    min-width: 20px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+}
+
 .error {
   font-family: $serif;
   font-size: 18px;
@@ -184,7 +186,7 @@
   border-bottom: 1px solid $ink;
 }
 
-// Dim until the form is complete (name filled + an option chosen).
-.rsvp:not(:has(.name:valid):has(input[type='radio']:checked)) .submit {
+// Dim until an option is chosen.
+.rsvp:not(:has(input[type='radio']:checked)) .submit {
   opacity: 0.4;
 }

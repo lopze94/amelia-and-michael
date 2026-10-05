@@ -1,16 +1,22 @@
 import type { Handle } from 'remix/component'
 
+import type { Invitation } from '../data/tables.ts'
 import { giftAccounts } from '../data/gifts.ts'
 import { routes } from '../routes.ts'
 import { Layout } from '../ui/layout.tsx'
 import styles from './pages.module.scss.ts'
 
+// Pages pass `invited` to the Layout so it can show the Confirmar link.
+interface PageProps {
+  invited?: boolean
+}
+
 const MAPS_URL =
   'https://www.google.com/maps/search/?api=1&query=Sal%C3%B3n+Las+Jacarandas+San+Jorge+zona+11+Guatemala'
 
-export function HomePage() {
+export function HomePage(handle: Handle<PageProps>) {
   return () => (
-    <Layout page="home">
+    <Layout page="home" invited={handle.props.invited}>
       <div class={styles.stack18}>
         <div class={styles.eyebrow}>Junto a sus familias</div>
         <h1 class={styles.names}>
@@ -23,9 +29,9 @@ export function HomePage() {
   )
 }
 
-export function LocationPage() {
+export function LocationPage(handle: Handle<PageProps>) {
   return () => (
-    <Layout page="location">
+    <Layout page="location" invited={handle.props.invited}>
       <div class={styles.stack16}>
         <div class={styles.eyebrow}>Ubicación</div>
         <h2 class={styles.heading}>Salón Las Jacarandas</h2>
@@ -51,26 +57,65 @@ export function LocationPage() {
 }
 
 export interface RsvpPageProps {
-  sent?: { name: string; attend: 'yes' | 'no' }
+  invitation: Invitation
+  // Shown after a successful submit.
+  thanks?: boolean
   error?: string
-  values?: { name: string; attend: string }
+}
+
+const inviteeNames = (invitation: Invitation) =>
+  invitation.name_2 ? `${invitation.name_1} y ${invitation.name_2}` : invitation.name_1
+
+function choiceLabel(count: number, guests: number) {
+  if (count === 0) return guests === 1 ? 'No podré asistir' : 'No podremos asistir'
+  if (guests === 1) return 'Con gusto asistiré'
+  if (count === guests) return `Asistiremos los ${count}`
+  return count === 1 ? 'Asistirá 1 persona' : `Asistirán ${count} personas`
+}
+
+function answerSummary(invitation: Invitation) {
+  let { confirmed_guests: count, confirmed_at, guests } = invitation
+  if (count === null) return null
+  let date = confirmed_at ? new Date(confirmed_at).toLocaleDateString('es-GT') : ''
+  return `${count}/${guests} invitados confirmados${date ? ` el ${date}` : ''}`
 }
 
 export function RsvpPage(handle: Handle<RsvpPageProps>) {
   return () => {
-    let { sent, error, values } = handle.props
+    let { invitation, thanks, error } = handle.props
+    let href = routes.rsvp.index.href()
+    let answered = invitation.confirmed_guests !== null
+    // Up to two guests get a full-text button per option; larger parties pick a number.
+    let compact = invitation.guests > 2
+    let counts = Array.from({ length: invitation.guests + 1 }, (_, i) => invitation.guests - i)
+    let radio = (count: number, label: string, className: string = styles.choice) => (
+      <label key={count} class={className}>
+        <input
+          type="radio"
+          name="guests"
+          value={String(count)}
+          required
+          defaultChecked={invitation.confirmed_guests === count}
+        />
+        <span>{label}</span>
+      </label>
+    )
     return (
-      <Layout page="rsvp">
+      <Layout page="rsvp" invited>
         <div class={styles.stack16}>
           <div class={styles.eyebrow}>RSVP</div>
-          {sent ? (
+          {thanks && answered ? (
             <div class={styles.stack12}>
-              <h2 class={styles.heading}>Gracias, {sent.name.trim().split(/\s+/)[0]}</h2>
+              <h2 class={styles.heading}>Gracias, {inviteeNames(invitation)}</h2>
               <div class={styles.body}>
-                {sent.attend === 'yes'
-                  ? '¡Nos encantará celebrar contigo!'
-                  : 'Te extrañaremos — gracias por avisarnos.'}
+                {invitation.confirmed_guests === 0
+                  ? 'Te extrañaremos — gracias por avisarnos.'
+                  : '¡Nos encantará celebrar contigo!'}
               </div>
+              <div class={styles.label}>{answerSummary(invitation)}</div>
+              <a class={styles.link} href={href}>
+                Cambiar respuesta
+              </a>
             </div>
           ) : (
             <form
@@ -78,27 +123,26 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
               method="post"
               action={routes.rsvp.action.href()}
             >
-              <h2 class={styles.heading}>Confirma tu asistencia</h2>
-              <input
-                class={styles.name}
-                type="text"
-                name="name"
-                required
-                autocomplete="name"
-                placeholder="Tu nombre completo"
-                aria-label="Tu nombre completo"
-                defaultValue={values?.name ?? ''}
-              />
-              <div class={styles.choices}>
-                <label class={styles.choice}>
-                  <input type="radio" name="attend" value="yes" required defaultChecked={values?.attend === 'yes'} />
-                  <span>Con gusto asistiré</span>
-                </label>
-                <label class={styles.choice}>
-                  <input type="radio" name="attend" value="no" required defaultChecked={values?.attend === 'no'} />
-                  <span>No podré asistir</span>
-                </label>
-              </div>
+              <h2 class={styles.heading}>{inviteeNames(invitation)}</h2>
+              <div class={styles.body}>Confirma tu asistencia</div>
+              {answered ? <div class={styles.label}>{answerSummary(invitation)}</div> : null}
+              {compact ? (
+                <div class={styles.stack12}>
+                  <div class={styles.label}>¿Cuántos asistirán?</div>
+                  <div class={styles.numbers}>
+                    {counts.filter((count) => count > 0).reverse().map((count) =>
+                      radio(count, String(count), styles.number),
+                    )}
+                  </div>
+                  <div class={styles.choices}>
+                    {radio(0, choiceLabel(0, invitation.guests))}
+                  </div>
+                </div>
+              ) : (
+                <div class={styles.choices}>
+                  {counts.map((count) => radio(count, choiceLabel(count, invitation.guests)))}
+                </div>
+              )}
               {error ? (
                 <div class={styles.error} role="alert">
                   {error}
@@ -115,9 +159,20 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
   }
 }
 
-export function GiftsPage() {
+export function InviteNotFoundPage() {
   return () => (
-    <Layout page="gifts">
+    <Layout page="home">
+      <div class={styles.stack12}>
+        <h2 class={styles.heading}>Invitación no encontrada</h2>
+        <div class={styles.body}>Usa el enlace que te enviamos para confirmar tu asistencia.</div>
+      </div>
+    </Layout>
+  )
+}
+
+export function GiftsPage(handle: Handle<PageProps>) {
+  return () => (
+    <Layout page="gifts" invited={handle.props.invited}>
       <div class={styles.stack12}>
         <h2 class={styles.heading}>Tu presencia es suficiente</h2>
         <p class={`${styles.body} ${styles.giftsCopy}`}>

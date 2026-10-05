@@ -13,20 +13,10 @@ describe('root controller', () => {
     assert.match(await response.text(), /Amelia/)
   })
 
-  it('serves every page', async () => {
-    for (let href of [routes.location.href(), routes.rsvp.index.href(), routes.gifts.href()]) {
+  it('serves every public page', async () => {
+    for (let href of [routes.location.href(), routes.gifts.href()]) {
       let response = await router.fetch(new URL(href, 'http://localhost'))
       assert.equal(response.status, 200)
     }
-  })
-
-  it('rejects an incomplete RSVP', async () => {
-    let response = await router.fetch(
-      new Request(new URL(routes.rsvp.action.href(), 'http://localhost'), {
-        method: 'POST',
-        body: new URLSearchParams({ name: '' }),
-      }),
-    )
-    assert.equal(response.status, 400)
   })
 })

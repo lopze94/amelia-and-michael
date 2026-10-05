@@ -1,53 +1,51 @@
 import { createController } from 'remix/router'
 import { redirect } from 'remix/response/redirect'
 
-import { saveRsvp } from '../../data/rsvps.ts'
+import { db } from '../../db.ts'
+import { invitations } from '../../data/tables.ts'
 import { routes } from '../../routes.ts'
-import { RsvpPage } from '../pages.tsx'
+import { InviteNotFoundPage, RsvpPage } from '../pages.tsx'
 
+// The invitation comes from the cookie set by loadInvitation(); without one there's no page.
 export default createController(routes.rsvp, {
   actions: {
     index(context) {
-      let url = new URL(context.request.url)
-      let name = url.searchParams.get('nombre')
-      let attend = url.searchParams.get('asistencia')
-      if (name && (attend === 'yes' || attend === 'no')) {
-        return context.render(<RsvpPage sent={{ name, attend }} />)
-      }
-      return context.render(<RsvpPage />)
+      let invitation = context.invitation
+      if (!invitation) return context.render(<InviteNotFoundPage />, { status: 404 })
+
+      let thanks = new URL(context.request.url).searchParams.has('gracias')
+      return context.render(<RsvpPage invitation={invitation} thanks={thanks} />)
     },
     async action(context) {
-      let form = context.formData
-      let name = String(form.get('name') ?? '').trim().slice(0, 200)
-      let attend = String(form.get('attend') ?? '')
+      let invitation = context.invitation
+      if (!invitation) return context.render(<InviteNotFoundPage />, { status: 404 })
 
-      if (!name || (attend !== 'yes' && attend !== 'no')) {
+      let value = String(context.formData.get('guests') ?? '')
+      let count = /^\d+$/.test(value) ? Number(value) : -1
+      if (count < 0 || count > invitation.guests) {
         return context.render(
-          <RsvpPage
-            error="Escribe tu nombre y elige una opción."
-            values={{ name, attend }}
-          />,
+          <RsvpPage invitation={invitation} error="Elige una opción." />,
           { status: 400 },
         )
       }
 
       try {
-        await saveRsvp({ name, attend, timestamp: new Date().toISOString() })
+        await db.update(invitations, invitation.id, {
+          confirmed_guests: count,
+          confirmed_at: new Date().toISOString(),
+        })
       } catch (error) {
         console.error('Failed to save RSVP', error)
         return context.render(
           <RsvpPage
+            invitation={invitation}
             error="No pudimos guardar tu respuesta. Inténtalo de nuevo."
-            values={{ name, attend }}
           />,
           { status: 500 },
         )
       }
 
-      let next = new URL(routes.rsvp.index.href(), 'http://localhost')
-      next.searchParams.set('nombre', name)
-      next.searchParams.set('asistencia', attend)
-      return redirect(next.pathname + next.search, 303)
+      return redirect(routes.rsvp.index.href(null, { searchParams: { gracias: '1' } }), 303)
     },
   },
 })

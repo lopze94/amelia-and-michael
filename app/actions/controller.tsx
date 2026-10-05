@@ -10,13 +10,13 @@ export default createController(routes, {
       return (await assets.fetch(context.request)) ?? new Response('Not Found', { status: 404 })
     },
     home(context) {
-      return context.render(<HomePage />)
+      return context.render(<HomePage invited={!!context.invitation} />)
     },
     location(context) {
-      return context.render(<LocationPage />)
+      return context.render(<LocationPage invited={!!context.invitation} />)
     },
     gifts(context) {
-      return context.render(<GiftsPage />)
+      return context.render(<GiftsPage invited={!!context.invitation} />)
     },
   },
 })
