@@ -19,6 +19,9 @@ export const Car = clientEntry(import.meta.url, function Car() {
             autoplay
             loop
             muted
+            preload="auto"
+            width="780"
+            height="280"
             playsInline
             aria-label="Los novios en un convertible clásico"
             mix={ref((video, signal) => keepPlaying(video, signal))}

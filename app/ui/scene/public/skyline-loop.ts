@@ -42,7 +42,7 @@ export function runSkyline(
     let node = document.createElement('img')
     node.src = kind.src
     node.alt = ''
-    node.decoding = 'async'
+    node.decoding = 'sync'
     node.className = classNames[kind.className]
 
     let last = pieces[pieces.length - 1]

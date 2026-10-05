@@ -14,8 +14,8 @@ export const Clouds = clientEntry(import.meta.url, function Clouds() {
       >
         {Array.from({ length: COPIES }, (_, i) => (
           <div key={i} class={styles.group}>
-            <img class={`${styles.cloud} ${styles.large}`} src="/img/cloud.png" alt="" />
-            <img class={`${styles.cloud} ${styles.small}`} src="/img/cloud.png" alt="" />
+            <img class={`${styles.cloud} ${styles.large}`} src="/img/cloud.png" width="795" height="360" alt="" />
+            <img class={`${styles.cloud} ${styles.small}`} src="/img/cloud.png" width="795" height="360" alt="" />
           </div>
         ))}
       </div>

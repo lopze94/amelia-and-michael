@@ -6,7 +6,7 @@ import styles from './scene.module.scss.ts'
 // The persistent animated backdrop, back to front: clouds, skyline + ground line, car.
 export function Scene() {
   return () => (
-    <div class={styles.scene} aria-hidden="true">
+    <div class={styles.scene} data-scene aria-hidden="true">
       {/* Recolors the cloud image to ink, with alpha derived from darkness. */}
       <svg width="0" height="0" class={styles.defs}>
         <filter id="inkify" color-interpolation-filters="sRGB">
