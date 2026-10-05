@@ -5,6 +5,8 @@ import {
 } from 'remix/multiple-import-maps-polyfill'
 import { run } from 'remix/component'
 
+import { installPageTransitions } from './page-transition.ts'
+
 const app = run({
   async loadModule(moduleUrl, exportName) {
     let mod = await importModule(moduleUrl)
@@ -62,3 +64,5 @@ async function revealScene() {
 }
 
 void revealScene()
+
+installPageTransitions()
