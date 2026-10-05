@@ -3,7 +3,8 @@ import { Clouds } from './public/clouds.tsx'
 import { Skyline } from './public/skyline.tsx'
 import styles from './scene.module.scss.ts'
 
-// The persistent animated backdrop, back to front: clouds, skyline + ground line, car.
+// The page is layered back to front: clouds (Scene), page content, then the skyline + ground
+// line and the car (SceneFront). Both scene layers fade in together (see entry.ts).
 export function Scene() {
   return () => (
     <div class={styles.scene} data-scene aria-hidden="true">
@@ -24,6 +25,13 @@ export function Scene() {
         </filter>
       </svg>
       <Clouds />
+    </div>
+  )
+}
+
+export function SceneFront() {
+  return () => (
+    <div class={styles.scene} data-scene aria-hidden="true">
       <Skyline />
       <Car />
     </div>

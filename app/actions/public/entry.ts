@@ -35,17 +35,17 @@ if (import.meta.hot) {
   })
 }
 
-// The scene starts transparent (see scene.module.scss) and fades in once its images are
+// The scene layers start transparent (see scene.module.scss) and fade in once its images are
 // decoded and the video has its first frame, so nothing flashes in piecemeal.
 async function revealScene() {
-  let scene = document.querySelector<HTMLElement>('[data-scene]')
-  if (!scene) return
+  let scenes = document.querySelectorAll<HTMLElement>('[data-scene]')
+  if (scenes.length === 0) return
   let images = ['/img/cloud.png', '/img/london.png', '/img/guatemala.png'].map((src) => {
     let image = new Image()
     image.src = src
     return image.decode().catch(() => {})
   })
-  let video = scene.querySelector('video')
+  let video = document.querySelector<HTMLVideoElement>('[data-scene] video')
   let firstFrame = new Promise<void>((resolve) => {
     if (!video || video.readyState >= 2) return resolve()
     video.addEventListener('loadeddata', () => resolve(), { once: true })
@@ -55,11 +55,13 @@ async function revealScene() {
   // The Web Animations API, not an attribute or class: hydration resets those on this element.
   let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   requestAnimationFrame(() => {
-    scene.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: reduced ? 0 : 800,
-      easing: 'ease',
-      fill: 'forwards',
-    })
+    for (let scene of scenes) {
+      scene.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: reduced ? 0 : 800,
+        easing: 'ease',
+        fill: 'forwards',
+      })
+    }
   })
 }
 

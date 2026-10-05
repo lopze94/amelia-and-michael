@@ -3,7 +3,7 @@ import type { Handle, RemixNode } from 'remix/component'
 import { Document } from '../actions/document.tsx'
 import { routes } from '../routes.ts'
 import styles from './layout.module.scss.ts'
-import { Scene } from './scene/scene.tsx'
+import { Scene, SceneFront } from './scene/scene.tsx'
 
 export type PageKey = 'home' | 'location' | 'rsvp' | 'gifts'
 
@@ -42,6 +42,7 @@ export function Layout(handle: Handle<LayoutProps>) {
           ))}
         </nav>
         <main class={styles.main}>{children}</main>
+        <SceneFront />
       </div>
     </Document>
     )
