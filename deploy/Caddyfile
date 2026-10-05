@@ -1,0 +1,3 @@
+ameliaandmichael.com, www.ameliaandmichael.com {
+	reverse_proxy localhost:44100
+}
