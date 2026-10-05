@@ -2,6 +2,7 @@ import type { Handle, RemixNode } from 'remix/component'
 import { ImportMap } from 'remix/component/server'
 
 import { scriptEntry } from '../assets.ts'
+import { getLocale } from '../i18n.ts'
 
 export interface DocumentProps {
   children?: RemixNode
@@ -26,7 +27,7 @@ export function Document(handle: Handle<DocumentProps>) {
     let { href, importMap, preloads } = scriptEntry
 
     return (
-      <html lang="es">
+      <html lang={getLocale()}>
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />

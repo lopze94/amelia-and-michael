@@ -3,6 +3,7 @@ import { redirect } from 'remix/response/redirect'
 
 import { db } from '../../db.ts'
 import { invitations } from '../../data/tables.ts'
+import { localizeHref, m } from '../../i18n.ts'
 import { routes } from '../../routes.ts'
 import { InviteNotFoundPage, RsvpPage } from '../pages.tsx'
 
@@ -24,7 +25,7 @@ export default createController(routes.rsvp, {
       let count = /^\d+$/.test(value) ? Number(value) : -1
       if (count < 0 || count > invitation.guests) {
         return context.render(
-          <RsvpPage invitation={invitation} error="Elige una opción." />,
+          <RsvpPage invitation={invitation} error={m.rsvp_error_choose()} />,
           { status: 400 },
         )
       }
@@ -39,13 +40,16 @@ export default createController(routes.rsvp, {
         return context.render(
           <RsvpPage
             invitation={invitation}
-            error="No pudimos guardar tu respuesta. Inténtalo de nuevo."
+            error={m.rsvp_error_save()}
           />,
           { status: 500 },
         )
       }
 
-      return redirect(routes.rsvp.index.href(null, { searchParams: { gracias: '1' } }), 303)
+      return redirect(
+        localizeHref(routes.rsvp.index.href(null, { searchParams: { gracias: '1' } })),
+        303,
+      )
     },
   },
 })

@@ -5,6 +5,7 @@ import type { Middleware } from 'remix/router'
 import { invitations } from '../data/tables.ts'
 import type { Invitation } from '../data/tables.ts'
 import { db } from '../db.ts'
+import { localizeHref } from '../i18n.ts'
 
 export const inviteContext = createContextKey<Invitation | null>()
 
@@ -34,7 +35,7 @@ export function loadInvitation(): Middleware<{
     if (url.searchParams.has('invite') && (method === 'GET' || method === 'HEAD')) {
       let id = url.searchParams.get('invite') ?? ''
       url.searchParams.delete('invite')
-      let headers = new Headers({ Location: url.pathname + url.search })
+      let headers = new Headers({ Location: localizeHref(url.pathname + url.search) })
       if (id && id !== cookieId && (await db.find(invitations, id))) {
         headers.set('Set-Cookie', await inviteCookie.serialize(id))
       }

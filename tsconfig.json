@@ -6,6 +6,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext",
+    "allowJs": true,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
     "verbatimModuleSyntax": true,

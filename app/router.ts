@@ -3,6 +3,7 @@ import { formData } from 'remix/middleware/form-data'
 import { render } from 'remix/middleware/render'
 import { staticFiles } from 'remix/middleware/static'
 
+import { withLocale } from './i18n.ts'
 import { loadInvitation } from './middleware/invite.ts'
 import controller from './actions/controller.tsx'
 import rsvpController from './actions/rsvp/controller.tsx'
@@ -22,7 +23,7 @@ declare module 'remix' {
   }
 }
 
-export const router = createRouter<AppContext>({
+const appRouter = createRouter<AppContext>({
   middleware: [
     staticFiles('./public', { index: false }),
     inviteMiddleware,
@@ -31,5 +32,8 @@ export const router = createRouter<AppContext>({
   ],
 })
 
-router.map(routes, controller)
-router.map(routes.rsvp, rsvpController)
+appRouter.map(routes, controller)
+appRouter.map(routes.rsvp, rsvpController)
+
+// The public entry point: resolves the locale from the URL, then routes the Spanish path.
+export const router = { fetch: withLocale((request) => appRouter.fetch(request)) }

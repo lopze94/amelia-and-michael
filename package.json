@@ -3,20 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run build:css && (node scripts/build-css.ts --watch > /dev/null &) ; NODE_ENV=development node --watch --import remix/node-tsx server.ts",
-    "hmr": "npm run build:css && (node scripts/build-css.ts --watch > /dev/null &) ; NODE_ENV=development node hmr.ts",
+    "dev": "npm run build:css && npm run build:i18n && (node scripts/build-css.ts --watch > /dev/null &) ; (paraglide-js compile --project ./project.inlang --silent --watch > /dev/null &) ; NODE_ENV=development node --watch --import remix/node-tsx server.ts",
+    "hmr": "npm run build:css && npm run build:i18n && (node scripts/build-css.ts --watch > /dev/null &) ; (paraglide-js compile --project ./project.inlang --silent --watch > /dev/null &) ; NODE_ENV=development node hmr.ts",
     "start": "NODE_ENV=production node --import remix/node-tsx server.ts",
     "test": "NODE_ENV=test remix test",
     "typecheck": "tsc --noEmit",
     "build:css": "node scripts/build-css.ts",
-    "prestart": "npm run build:css",
-    "pretest": "npm run build:css",
-    "pretypecheck": "npm run build:css"
+    "prestart": "npm run build:css && npm run build:i18n",
+    "pretest": "npm run build:css && npm run build:i18n",
+    "pretypecheck": "npm run build:css && npm run build:i18n",
+    "build:i18n": "paraglide-js compile --project ./project.inlang --silent"
   },
   "engines": {
     "node": ">=24.3.0"
   },
   "dependencies": {
+    "@inlang/paraglide-js": "^2.25.4",
     "@paralleldrive/cuid2": "^3.3.0",
     "animejs": "^4.5.0",
     "remix": "^3.0.0"
