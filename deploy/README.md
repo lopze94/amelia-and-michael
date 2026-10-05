@@ -1,7 +1,7 @@
 # Deploying to the droplet
 
 Files here are meant to be copied onto a fresh Ubuntu droplet. Paths assume a `deploy` user
-and the repo cloned at `/home/deploy/amelia-wedding`.
+and the repo cloned at `/home/deploy/amelia-and-michael`.
 
 ## One-time setup (as root)
 
@@ -28,7 +28,7 @@ mkdir -p /var/lib/wedding && chown deploy:deploy /var/lib/wedding
 ## App (as deploy)
 
 ```sh
-git clone <repo-url> amelia-wedding && cd amelia-wedding
+git clone <repo-url> amelia-and-michael && cd amelia-and-michael
 npm ci
 ```
 
@@ -47,7 +47,7 @@ systemctl reload caddy
 `crontab -e`, then add:
 
 ```
-0 3 * * * /home/deploy/amelia-wedding/deploy/backup.sh
+0 3 * * * /home/deploy/amelia-and-michael/deploy/backup.sh
 ```
 
 Copy `/var/backups/wedding` off the droplet now and then, or enable DigitalOcean backups.
@@ -55,7 +55,7 @@ Copy `/var/backups/wedding` off the droplet now and then, or enable DigitalOcean
 ## Updating
 
 ```sh
-cd ~/amelia-wedding && git pull && npm ci && sudo systemctl restart wedding
+cd ~/amelia-and-michael && git pull && npm ci && sudo systemctl restart wedding
 ```
 
 (`deploy` needs sudo for that last step, or run it as root.) Logs: `journalctl -u wedding -f`.

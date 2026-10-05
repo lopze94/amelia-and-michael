@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=deploy
-WorkingDirectory=/home/deploy/amelia-wedding
+WorkingDirectory=/home/deploy/amelia-and-michael
 Environment=PORT=44100
 Environment=TRUST_PROXY=1
 Environment=DATABASE_FILE=/var/lib/wedding/wedding.sqlite
