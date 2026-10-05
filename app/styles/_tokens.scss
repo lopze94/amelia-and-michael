@@ -1,0 +1,20 @@
+$paper: #fcfcfa;
+$ink: #202d2b;
+$ink-deep: #1d2d2c;
+$ink-hover: #141d1c;
+$green: #32514c;
+$terracotta: #9a5a3c;
+$rule: rgba($ink, 0.35);
+$rule-input: rgba($ink, 0.5);
+
+$sans: 'Jost', Helvetica, sans-serif;
+$serif: 'Cormorant Garamond', serif;
+$display: 'EB Garamond', serif;
+
+$h2-size: clamp(32px, 4.4vw, 52px);
+
+@mixin label($tracking: 0.24em) {
+  font-size: 12px;
+  letter-spacing: $tracking;
+  text-transform: uppercase;
+}

@@ -1,0 +1,26 @@
+{
+  "name": "amelia-michael",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build:css && (sass --watch --no-source-map app/styles/main.scss:public/css/main.css &) ; NODE_ENV=development node --watch --import remix/node-tsx server.ts",
+    "hmr": "npm run build:css && (sass --watch --no-source-map app/styles/main.scss:public/css/main.css &) ; NODE_ENV=development node hmr.ts",
+    "start": "NODE_ENV=production node --import remix/node-tsx server.ts",
+    "test": "NODE_ENV=test remix test",
+    "typecheck": "tsc --noEmit",
+    "build:css": "sass --no-source-map app/styles/main.scss public/css/main.css",
+    "prestart": "npm run build:css",
+    "pretest": "npm run build:css"
+  },
+  "engines": {
+    "node": ">=24.3.0"
+  },
+  "dependencies": {
+    "remix": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "sass": "^1.99.0",
+    "typescript": "latest"
+  }
+}

@@ -1,0 +1,35 @@
+@use 'tokens' as *;
+@use 'scene';
+@use 'pages';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: $paper;
+  overflow: hidden;
+}
+
+.app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: $paper;
+  color: $ink;
+  font-family: $sans;
+}
+
+a {
+  color: $ink;
+  text-decoration: none;
+  border-bottom: 1px solid $rule;
+
+  &:hover {
+    color: $ink-hover;
+    border-bottom-color: $ink-hover;
+  }
+}
+
+input::placeholder {
+  color: rgba($ink, 0.45);
+}

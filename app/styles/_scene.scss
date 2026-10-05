@@ -1,0 +1,188 @@
+@use 'tokens' as *;
+
+// Image aspect ratios
+$london-ratio: calc(2172 / 672);
+$guate-ratio: calc(1774 / 558);
+
+.scene {
+  --city-duration: 60s;
+  --cloud-duration: 150s;
+  --london-h: clamp(143px, 28.5vh, 360px);
+  --guate-h: clamp(156px, 31.3vh, 396px);
+  --overlap: 9vw;
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scene__defs {
+  position: absolute;
+}
+
+// Seamless endless scroll: N identical copies, translate by one copy's width.
+@keyframes scroll-left {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes scroll-left-thirds {
+  to {
+    transform: translate3d(calc(-100% / 3), 0, 0);
+  }
+}
+
+.clouds {
+  position: absolute;
+  left: 0;
+  top: clamp(50px, 7vh, 90px);
+  opacity: 0.22; // 0.4 x buildingOpacity (0.55)
+}
+
+.clouds__track {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  will-change: transform;
+  animation: scroll-left-thirds var(--cloud-duration) linear infinite;
+}
+
+.clouds__group {
+  display: flex;
+  align-items: flex-start;
+  gap: 28vw;
+  padding-right: 28vw;
+}
+
+.cloud {
+  display: block;
+  aspect-ratio: 795 / 360;
+  filter: url(#inkify);
+
+  &--a {
+    height: clamp(110px, 22vh, 260px);
+  }
+  &--b {
+    height: clamp(80px, 15vh, 180px);
+    margin-top: 24vh;
+    transform: scaleX(-1);
+  }
+}
+
+.skyline {
+  position: absolute;
+  left: 0;
+  bottom: 22vh;
+}
+
+.skyline__track {
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+  will-change: transform;
+  animation: scroll-left var(--city-duration) linear infinite;
+}
+
+.skyline__copy {
+  display: flex;
+  align-items: flex-end;
+}
+
+.london {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  display: block;
+  height: var(--london-h);
+  aspect-ratio: 2172 / 672;
+}
+
+// Guatemala overlaps its neighbours. A full copy sits behind the London to its left;
+// a copy clipped to its right edge sits in front of the next London.
+.guatemala {
+  position: relative;
+  flex: none;
+  margin: 0 calc(-1 * var(--overlap));
+  height: var(--guate-h);
+  aspect-ratio: 1774 / 558;
+
+  img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+.guatemala__base {
+  z-index: 1;
+}
+.guatemala__front {
+  z-index: 3;
+  clip-path: inset(0 0 0 calc(100% - var(--overlap)));
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22vh;
+  height: 1px;
+  background: $rule;
+}
+
+// --- Car: sway (accel/decel) as two incommensurate sine-ish loops ---------------
+// Amplitude A = min(6vw, 90px). Primary period 22s; harmonic at 1.7x (~12.9s) at 25%.
+$sway: min(6vw, 90px);
+
+@keyframes sway-primary {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(calc(#{$sway} * 1)) rotate(-0.4deg); }
+  50% { transform: translateX(0) rotate(0deg); }
+  75% { transform: translateX(calc(#{$sway} * -1)) rotate(0.4deg); }
+}
+@keyframes sway-secondary {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(calc(#{$sway} * 0.25)); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(calc(#{$sway} * -0.25)); }
+}
+
+.car {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(15vh - 0.4vw);
+  display: flex;
+  justify-content: center;
+}
+
+.car__sway {
+  position: relative;
+  width: clamp(200px, 26vw, 460px);
+  animation: sway-secondary 12.94s ease-in-out infinite;
+}
+
+.car__video {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 77%;
+  animation: sway-primary 22s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clouds__track,
+  .skyline__track {
+    animation-duration: calc(var(--city-duration) * 4);
+  }
+  .clouds__track {
+    animation-duration: calc(var(--cloud-duration) * 4);
+  }
+  .car__sway,
+  .car__video {
+    animation: none;
+  }
+}
