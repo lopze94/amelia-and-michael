@@ -9,7 +9,7 @@
 .clouds {
   position: absolute;
   left: 0;
-  top: clamp(50px, 7vh, 90px);
+  top: 8px;
   opacity: 0.22; // 0.4 x buildingOpacity (0.55)
 }
 
@@ -32,17 +32,19 @@
 
 .cloud {
   display: block;
+  // The width attribute (there to reserve space) would otherwise pin the width to 795px.
+  width: auto;
   aspect-ratio: 795 / 360;
   filter: url(#inkify);
 }
 
 .large {
-  height: clamp(110px, 22vh, 260px);
+  height: 200px;
 }
 
 .small {
-  height: clamp(80px, 15vh, 180px);
-  margin-top: 24vh;
+  height: 135px;
+  margin-top: 440px;
   transform: scaleX(-1);
 }
 
