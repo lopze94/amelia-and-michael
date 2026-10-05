@@ -12,6 +12,12 @@ A minimal Remix application starter with a home page.
 - `app/assets.ts` owns the server-side asset pipeline used by the asset route and render middleware.
 - Root `public/` contains static files served unchanged from the app root.
 
+## Styles
+
+- Styles are SCSS modules (`*.module.scss`) beside the component that uses them; shared tokens and mixins live in `app/styles/_tokens.scss`, and global rules in `app/styles/global.scss`.
+- `scripts/build-css.ts` compiles them with Sass + lightningcss into `public/css/main.css` and generates a typed `*.module.scss.ts` next to each module (git-ignored). It runs automatically before `dev`, `hmr`, `start`, `test` and `typecheck`.
+- The animated backdrop is three components in `app/ui/scene/public/`: `Clouds`, `Skyline` and `Car`.
+
 ## Growing The App
 
 - Put top-level route actions in `app/actions/controller.tsx`.

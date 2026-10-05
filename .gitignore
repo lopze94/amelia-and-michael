@@ -4,3 +4,4 @@ tmp/
 .DS_Store
 data/
 public/css/
+*.module.scss.ts

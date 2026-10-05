@@ -1,0 +1,53 @@
+@use 'tokens' as *;
+
+@keyframes drift {
+  to {
+    transform: translate3d(calc(-100% / 3), 0, 0);
+  }
+}
+
+.clouds {
+  position: absolute;
+  left: 0;
+  top: clamp(50px, 7vh, 90px);
+  opacity: 0.22; // 0.4 x buildingOpacity (0.55)
+}
+
+.track {
+  --duration: 150s; // replaced with a measured value once the browser loads the images
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  will-change: transform;
+  animation: drift var(--duration) linear infinite;
+}
+
+// Three identical groups, so the loop is seamless.
+.group {
+  display: flex;
+  align-items: flex-start;
+  gap: 28vw;
+  padding-right: 28vw;
+}
+
+.cloud {
+  display: block;
+  aspect-ratio: 795 / 360;
+  filter: url(#inkify);
+}
+
+.large {
+  height: clamp(110px, 22vh, 260px);
+}
+
+.small {
+  height: clamp(80px, 15vh, 180px);
+  margin-top: 24vh;
+  transform: scaleX(-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation-duration: calc(var(--duration) * 4);
+  }
+}

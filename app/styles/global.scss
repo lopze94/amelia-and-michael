@@ -1,6 +1,4 @@
 @use 'tokens' as *;
-@use 'scene';
-@use 'pages';
 
 html,
 body {
@@ -8,15 +6,6 @@ body {
   padding: 0;
   background: $paper;
   overflow: hidden;
-}
-
-.app {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  background: $paper;
-  color: $ink;
-  font-family: $sans;
 }
 
 a {

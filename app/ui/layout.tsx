@@ -2,7 +2,8 @@ import type { Handle, RemixNode } from 'remix/component'
 
 import { Document } from '../actions/document.tsx'
 import { routes } from '../routes.ts'
-import { Scene } from './scene.tsx'
+import styles from './layout.module.scss.ts'
+import { Scene } from './scene/scene.tsx'
 
 const navItems = [
   { key: 'home', label: 'Inicio', href: routes.home.href() },
@@ -23,13 +24,13 @@ export function Layout(handle: Handle<LayoutProps>) {
     let { page, children } = handle.props
     return (
     <Document>
-      <div class="app">
+      <div class={styles.app}>
         <Scene />
-        <nav class="nav">
+        <nav class={styles.nav}>
           {navItems.map((item) => (
             <a
               key={item.key}
-              class="nav__link"
+              class={styles.navLink}
               href={item.href}
               aria-current={item.key === page ? 'page' : undefined}
             >
@@ -37,7 +38,7 @@ export function Layout(handle: Handle<LayoutProps>) {
             </a>
           ))}
         </nav>
-        <main class="main">{children}</main>
+        <main class={styles.main}>{children}</main>
       </div>
     </Document>
     )

@@ -3,6 +3,7 @@ import type { Handle } from 'remix/component'
 import { giftAccounts } from '../data/gifts.ts'
 import { routes } from '../routes.ts'
 import { Layout } from '../ui/layout.tsx'
+import styles from './pages.module.scss.ts'
 
 const MAPS_URL =
   'https://www.google.com/maps/search/?api=1&query=Sal%C3%B3n+Las+Jacarandas+San+Jorge+zona+11+Guatemala'
@@ -10,13 +11,13 @@ const MAPS_URL =
 export function HomePage() {
   return () => (
     <Layout page="home">
-      <div class="stack stack--18">
-        <div class="eyebrow eyebrow--wide">Junto a sus familias</div>
-        <h1 class="names">
-          Amelia <span class="names__amp">&amp;</span> Michael
+      <div class={styles.stack18}>
+        <div class={styles.eyebrow}>Junto a sus familias</div>
+        <h1 class={styles.names}>
+          Amelia <span class={styles.amp}>&amp;</span> Michael
         </h1>
-        <div class="date">Viernes 27 de noviembre de 2026</div>
-        <div class="label label--ink">Guatemala &nbsp;·&nbsp; Inglaterra</div>
+        <div class={styles.date}>Viernes 27 de noviembre de 2026</div>
+        <div class={styles.label}>Guatemala &nbsp;·&nbsp; Inglaterra</div>
       </div>
     </Layout>
   )
@@ -25,23 +26,23 @@ export function HomePage() {
 export function LocationPage() {
   return () => (
     <Layout page="location">
-      <div class="stack stack--16">
-        <div class="eyebrow eyebrow--wide">Ubicación</div>
-        <h2 class="h2">Salón Las Jacarandas</h2>
-        <div class="body body--address">
+      <div class={styles.stack16}>
+        <div class={styles.eyebrow}>Ubicación</div>
+        <h2 class={styles.heading}>Salón Las Jacarandas</h2>
+        <div class={`${styles.body} ${styles.address}`}>
           9 calle A, 23 avenida final
           <br />
           Residenciales San Jorge, zona 11
         </div>
-        <div class="facts">
-          <div class="fact">
-            Hora<div class="fact__value">7:00 – 10:00 pm</div>
+        <div class={styles.facts}>
+          <div class={styles.fact}>
+            Hora<div class={styles.factValue}>7:00 – 10:00 pm</div>
           </div>
-          <div class="fact">
-            Código de acceso<div class="fact__value">587 y 051</div>
+          <div class={styles.fact}>
+            Código de acceso<div class={styles.factValue}>587 y 051</div>
           </div>
         </div>
-        <a class="link" href={MAPS_URL} target="_blank" rel="noopener">
+        <a class={styles.link} href={MAPS_URL} target="_blank" rel="noopener">
           Abrir en Maps
         </a>
       </div>
@@ -60,12 +61,12 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
     let { sent, error, values } = handle.props
     return (
       <Layout page="rsvp">
-        <div class="stack stack--16">
-          <div class="eyebrow eyebrow--wide">RSVP</div>
+        <div class={styles.stack16}>
+          <div class={styles.eyebrow}>RSVP</div>
           {sent ? (
-            <div class="stack stack--12">
-              <h2 class="h2">Gracias, {sent.name.trim().split(/\s+/)[0]}</h2>
-              <div class="body">
+            <div class={styles.stack12}>
+              <h2 class={styles.heading}>Gracias, {sent.name.trim().split(/\s+/)[0]}</h2>
+              <div class={styles.body}>
                 {sent.attend === 'yes'
                   ? '¡Nos encantará celebrar contigo!'
                   : 'Te extrañaremos — gracias por avisarnos.'}
@@ -73,13 +74,13 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
             </div>
           ) : (
             <form
-              class="rsvp stack stack--18"
+              class={`${styles.rsvp} ${styles.stack18}`}
               method="post"
               action={routes.rsvp.action.href()}
             >
-              <h2 class="h2">Confirma tu asistencia</h2>
+              <h2 class={styles.heading}>Confirma tu asistencia</h2>
               <input
-                class="rsvp__name"
+                class={styles.name}
                 type="text"
                 name="name"
                 required
@@ -88,22 +89,22 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
                 aria-label="Tu nombre completo"
                 defaultValue={values?.name ?? ''}
               />
-              <div class="rsvp__choices">
-                <label class="choice">
+              <div class={styles.choices}>
+                <label class={styles.choice}>
                   <input type="radio" name="attend" value="yes" required defaultChecked={values?.attend === 'yes'} />
                   <span>Con gusto asistiré</span>
                 </label>
-                <label class="choice">
+                <label class={styles.choice}>
                   <input type="radio" name="attend" value="no" required defaultChecked={values?.attend === 'no'} />
                   <span>No podré asistir</span>
                 </label>
               </div>
               {error ? (
-                <div class="rsvp__error" role="alert">
+                <div class={styles.error} role="alert">
                   {error}
                 </div>
               ) : null}
-              <button class="rsvp__submit" type="submit">
+              <button class={styles.submit} type="submit">
                 Enviar respuesta
               </button>
             </form>
@@ -117,16 +118,16 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
 export function GiftsPage() {
   return () => (
     <Layout page="gifts">
-      <div class="stack stack--12">
-        <h2 class="h2">Tu presencia es suficiente</h2>
-        <p class="body body--gifts">
+      <div class={styles.stack12}>
+        <h2 class={styles.heading}>Tu presencia es suficiente</h2>
+        <p class={`${styles.body} ${styles.giftsCopy}`}>
           Si deseas obsequiarnos algo, agradeceremos un aporte en efectivo.
         </p>
-        <div class="gifts">
+        <div class={styles.gifts}>
           {giftAccounts.map((account) => (
-            <div key={account.label} class="fact">
+            <div key={account.label} class={styles.fact}>
               {account.label}
-              <div class="fact__value fact__value--nowrap">{account.value}</div>
+              <div class={`${styles.factValue} ${styles.giftValue}`}>{account.value}</div>
             </div>
           ))}
         </div>

@@ -1,0 +1,51 @@
+@use 'tokens' as *;
+
+.app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: $paper;
+  color: $ink;
+  font-family: $sans;
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: clamp(20px, 4vw, 56px);
+  padding: 28px 20px;
+  @include label;
+}
+
+.navLink {
+  padding: 6px 0;
+  color: $ink;
+  opacity: 0.6;
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    opacity: 1;
+    color: $ink;
+    border-bottom-color: transparent;
+  }
+
+  &[aria-current='page'] {
+    opacity: 1;
+    border-bottom-color: $ink;
+  }
+}
+
+.main {
+  position: absolute;
+  top: clamp(80px, 13vh, 140px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 560px);
+  box-sizing: border-box;
+  padding: 24px 28px 40px;
+  text-align: center;
+}

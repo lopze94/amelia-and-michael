@@ -1,0 +1,83 @@
+@use 'tokens' as *;
+
+@keyframes scroll {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.skyline {
+  --london-height: clamp(143px, 28.5vh, 360px);
+  --guatemala-height: clamp(156px, 31.3vh, 396px);
+  --overlap: 9vw;
+
+  position: absolute;
+  left: 0;
+  bottom: 22vh;
+}
+
+.track {
+  --duration: 60s; // replaced with a measured value once the browser loads the images
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+  will-change: transform;
+  animation: scroll var(--duration) linear infinite;
+}
+
+// Two identical copies side by side, so the loop is seamless.
+.copy {
+  display: flex;
+  align-items: flex-end;
+}
+
+.london {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  display: block;
+  height: var(--london-height);
+  aspect-ratio: 2172 / 672;
+}
+
+// Guatemala overlaps its neighbours: a full copy sits behind the London to its left, and
+// a copy clipped to its right edge sits in front of the next London.
+.guatemala {
+  position: relative;
+  flex: none;
+  margin: 0 calc(-1 * var(--overlap));
+  height: var(--guatemala-height);
+  aspect-ratio: 1774 / 558;
+
+  img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.base {
+  z-index: 1;
+}
+
+.front {
+  z-index: 3;
+  clip-path: inset(0 0 0 calc(100% - var(--overlap)));
+}
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22vh;
+  height: 1px;
+  background: $rule;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation-duration: calc(var(--duration) * 4);
+  }
+}
