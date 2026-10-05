@@ -17,6 +17,7 @@
     "node": ">=24.3.0"
   },
   "dependencies": {
+    "animejs": "^4.5.0",
     "remix": "^3.0.0"
   },
   "devDependencies": {

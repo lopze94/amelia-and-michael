@@ -1,26 +1,29 @@
+import { animate } from 'animejs'
 import { clientEntry, ref } from 'remix/component'
 
 import styles from './car.module.scss.ts'
 
 const BUMPINESS = 1
 
+const rand = (min: number, max: number) => min + Math.random() * (max - min)
+
 export const Car = clientEntry(import.meta.url, function Car() {
   return () => (
     <div class={styles.car}>
-      <div class={styles.sway}>
-        <video
-          class={styles.video}
-          src="/img/car.webm"
-          autoplay
-          loop
-          muted
-          playsInline
-          aria-label="Los novios en un convertible clásico"
-          mix={ref((video, signal) => {
-            keepPlaying(video, signal)
-            bumpRandomly(video, signal)
-          })}
-        />
+      {/* Layers, outside in: sway (drifting back and forth) > bumps (road) > video. */}
+      <div class={styles.sway} mix={ref((node, signal) => swayRandomly(node, signal))}>
+        <div class={styles.bumps} mix={ref((node, signal) => bumpRandomly(node, signal))}>
+          <video
+            class={styles.video}
+            src="/img/car.webm"
+            autoplay
+            loop
+            muted
+            playsInline
+            aria-label="Los novios en un convertible clásico"
+            mix={ref((video, signal) => keepPlaying(video, signal))}
+          />
+        </div>
       </div>
     </div>
   )
@@ -34,27 +37,63 @@ function keepPlaying(video: HTMLVideoElement, signal: AbortSignal) {
   video.addEventListener('canplay', play, { once: true, signal })
 }
 
+// Accelerating and braking: the car drifts to a new random spot (random distance, random
+// time), leaning into the move, and picks another the moment it arrives.
+function swayRandomly(node: HTMLElement, signal: AbortSignal) {
+  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+  let range = () => Math.min(window.innerWidth * 0.06, 90)
+  let x = 0
+  let current: ReturnType<typeof animate> | undefined
+  let timer: ReturnType<typeof setTimeout>
+
+  function drift() {
+    if (signal.aborted) return
+    if (reduced.matches) {
+      timer = setTimeout(drift, 1000)
+      return
+    }
+    let next = rand(-1, 1) * range()
+    // Lean tilts toward the direction of travel, scaled by how far it's going.
+    let lean = ((next - x) / (range() * 2)) * -0.8
+    x = next
+    let duration = rand(3500, 9000)
+    current = animate(node, {
+      x: next,
+      rotate: lean,
+      duration,
+      ease: 'inOutSine',
+      onComplete: drift,
+    })
+  }
+  drift()
+  signal.addEventListener('abort', () => {
+    clearTimeout(timer)
+    current?.cancel()
+  })
+}
+
 // A bump is a damped oscillation at the front axle, repeated 0.2s later at the rear.
-// Random strength and spacing; plays on top of the CSS sway via the Web Animations API.
-function bumpRandomly(video: HTMLVideoElement, signal: AbortSignal) {
+// Random strength and spacing, on its own layer so it never fights the sway.
+function bumpRandomly(node: HTMLElement, signal: AbortSignal) {
   let reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
   let axle = (d: number) => (d < 0 ? 0 : Math.exp(-7 * d) * Math.sin(24 * d))
+  let current: ReturnType<typeof animate> | undefined
 
   function bump() {
     if (reduced.matches || document.hidden) return
-    let strength = (0.7 + Math.random() * 0.9) * BUMPINESS
+    let strength = rand(0.7, 1.6) * BUMPINESS
     let steps = 40
     let seconds = 1
-    let frames: Keyframe[] = []
-    for (let i = 0; i <= steps; i++) {
+    let y: { to: number; duration: number }[] = []
+    let rotate: { to: number; duration: number }[] = []
+    for (let i = 1; i <= steps; i++) {
       let d = (i / steps) * seconds
       let front = axle(d)
       let rear = axle(d - 0.2)
-      let y = (front + rear) * 1.2 * strength
-      let rotate = (rear - front) * 0.3 * strength
-      frames.push({ transform: `translateY(${-y}px) rotate(${rotate}deg)`, offset: i / steps })
+      y.push({ to: -(front + rear) * 1.2 * strength, duration: (seconds * 1000) / steps })
+      rotate.push({ to: (rear - front) * 0.3 * strength, duration: (seconds * 1000) / steps })
     }
-    video.animate(frames, { duration: seconds * 1000, easing: 'linear' })
+    current = animate(node, { y, rotate, ease: 'linear' })
   }
 
   let timer: ReturnType<typeof setTimeout>
@@ -62,8 +101,11 @@ function bumpRandomly(video: HTMLVideoElement, signal: AbortSignal) {
     timer = setTimeout(() => {
       bump()
       schedule()
-    }, 2200 + Math.random() * 3500)
+    }, rand(2200, 5700))
   }
   schedule()
-  signal.addEventListener('abort', () => clearTimeout(timer))
+  signal.addEventListener('abort', () => {
+    clearTimeout(timer)
+    current?.cancel()
+  })
 }

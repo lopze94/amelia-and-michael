@@ -1,37 +1,6 @@
 @use 'tokens' as *;
 
-// Sway (accel/decel) is two incommensurate loops layered on each other: the primary on
-// the video (22s, with a slight lean) and a quieter 1.7x harmonic on its wrapper.
-// Amplitude is min(6vw, 90px). Random bumps are added from car.tsx.
-$sway: min(6vw, 90px);
-
-@keyframes sway-primary {
-  0%,
-  50%,
-  100% {
-    transform: translateX(0) rotate(0deg);
-  }
-  25% {
-    transform: translateX($sway) rotate(-0.4deg);
-  }
-  75% {
-    transform: translateX(calc(-1 * #{$sway})) rotate(0.4deg);
-  }
-}
-
-@keyframes sway-harmonic {
-  0%,
-  50%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(calc(#{$sway} * 0.25));
-  }
-  75% {
-    transform: translateX(calc(#{$sway} * -0.25));
-  }
-}
+// Sway and bumps are driven from car.tsx (anime.js), each on its own layer.
 
 .car {
   position: absolute;
@@ -45,21 +14,15 @@ $sway: min(6vw, 90px);
 .sway {
   position: relative;
   width: clamp(200px, 26vw, 460px);
-  animation: sway-harmonic 12.94s ease-in-out infinite;
+  transform-origin: 50% 77%;
+}
+
+.bumps {
+  transform-origin: 50% 77%;
 }
 
 .video {
-  position: relative;
   display: block;
   width: 100%;
   height: auto;
-  transform-origin: 50% 77%;
-  animation: sway-primary 22s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sway,
-  .video {
-    animation: none;
-  }
 }
