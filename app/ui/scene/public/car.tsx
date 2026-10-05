@@ -73,15 +73,18 @@ function swayRandomly(node: HTMLElement, signal: AbortSignal) {
 }
 
 // A bump is a damped oscillation at the front axle, repeated 0.2s later at the rear.
-// Random strength and spacing, on its own layer so it never fights the sway.
+// Random strength and spacing, on its own layer so it never fights the sway. A bump is also
+// forced whenever the video loops, to hide the seam.
 function bumpRandomly(node: HTMLElement, signal: AbortSignal) {
+  let video = node.querySelector('video')!
   let reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
   let axle = (d: number) => (d < 0 ? 0 : Math.exp(-7 * d) * Math.sin(24 * d))
   let current: ReturnType<typeof animate> | undefined
+  let timer: ReturnType<typeof setTimeout>
 
-  function bump() {
+  function bump(strength: number) {
     if (reduced.matches || document.hidden) return
-    let strength = rand(0.7, 1.6) * BUMPINESS
+    strength *= BUMPINESS
     let steps = 40
     let seconds = 1
     let y: { to: number; duration: number }[] = []
@@ -93,18 +96,46 @@ function bumpRandomly(node: HTMLElement, signal: AbortSignal) {
       y.push({ to: -(front + rear) * 1.2 * strength, duration: (seconds * 1000) / steps })
       rotate.push({ to: (rear - front) * 0.3 * strength, duration: (seconds * 1000) / steps })
     }
+    current?.pause()
     current = animate(node, { y, rotate, ease: 'linear' })
   }
 
-  let timer: ReturnType<typeof setTimeout>
+  // Random bumps; restarting the schedule after a loop bump avoids two in quick succession.
   function schedule() {
+    clearTimeout(timer)
     timer = setTimeout(() => {
-      bump()
+      // Squared so most are small and the odd one is a big jolt.
+      bump(0.3 + Math.random() ** 2 * 1.7)
       schedule()
     }, rand(2200, 5700))
   }
+
+  // The loop bump starts just before the last frame, so its first jolt lands on the cut.
+  // A currentTime that jumps backwards means the video wrapped, which re-arms it.
+  const LEAD = 0.1
+  const LOOP_STRENGTH = 2
+  let hasFrameCallback = typeof video.requestVideoFrameCallback === 'function'
+  let lastTime = 0
+  let armed = true
+  let stopWatching = false
+  function watchLoop(_now?: number, metadata?: VideoFrameCallbackMetadata) {
+    if (stopWatching) return
+    let time = metadata?.mediaTime ?? video.currentTime
+    if (time < lastTime) armed = true
+    if (armed && time >= video.duration - LEAD) {
+      armed = false
+      bump(LOOP_STRENGTH + Math.random() * 0.4)
+      schedule()
+    }
+    lastTime = time
+    if (hasFrameCallback) video.requestVideoFrameCallback(watchLoop)
+  }
+  if (hasFrameCallback) video.requestVideoFrameCallback(watchLoop)
+  else video.addEventListener('timeupdate', () => watchLoop(), { signal })
+
   schedule()
   signal.addEventListener('abort', () => {
+    stopWatching = true
     clearTimeout(timer)
     current?.cancel()
   })
