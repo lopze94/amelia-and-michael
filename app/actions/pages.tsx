@@ -175,13 +175,17 @@ export function GiftsPage(handle: Handle<PageProps>) {
       <div class={styles.stack12}>
         <h2 class={styles.heading}>Tu presencia es suficiente</h2>
         <p class={`${styles.body} ${styles.giftsCopy}`}>
-          Si deseas obsequiarnos algo, agradeceremos un aporte en efectivo.
+          Si deseas obsequiarnos algo, agradeceremos una contribución monetaria.
         </p>
         <div class={styles.gifts}>
           {giftAccounts.map((account) => (
             <div key={account.label} class={styles.fact}>
               {account.label}
-              <div class={`${styles.factValue} ${styles.giftValue}`}>{account.value}</div>
+              <div class={`${styles.factValue} ${styles.giftValue}`}>
+                {[account.value].flat().map((line) => (
+                  <div key={line}>{line}</div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
