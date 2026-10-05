@@ -40,12 +40,21 @@
 
 .large {
   height: 200px;
+
+  @include phone {
+    height: 120px;
+  }
 }
 
 .small {
   height: 135px;
   margin-top: 440px;
   transform: scaleX(-1);
+
+  @include phone {
+    height: 80px;
+    margin-top: 260px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

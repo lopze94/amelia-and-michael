@@ -9,6 +9,13 @@
   right: 0;
   bottom: 22vh;
   height: var(--guatemala-height);
+
+  @include phone {
+    --london-height: 150px;
+    --guatemala-height: 165px;
+
+    bottom: 16vh;
+  }
 }
 
 // Scrolled by runSkyline; pieces are absolutely positioned inside it.
@@ -47,6 +54,10 @@
   bottom: 22vh;
   height: 1px;
   background: $rule;
+
+  @include phone {
+    bottom: 16vh;
+  }
 }
 
 // Solid cover below the ground line, hiding anything that scrolls behind it.
@@ -57,4 +68,8 @@
   bottom: 0;
   height: 22vh;
   background: $paper;
+
+  @include phone {
+    height: 16vh;
+  }
 }

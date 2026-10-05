@@ -34,6 +34,10 @@
   font-style: italic;
   font-weight: 700;
   font-size: clamp(42px, 6.6vw, 98px);
+
+  @include phone {
+    font-size: 12.5vw;
+  }
   line-height: 1.05;
   letter-spacing: -0.025em;
   white-space: nowrap;
@@ -48,6 +52,10 @@
   font-family: $serif;
   font-size: clamp(18px, 2vw, 24px);
   white-space: nowrap;
+
+  @include phone {
+    font-size: 20px;
+  }
 }
 
 .heading {
@@ -80,6 +88,11 @@
   display: flex;
   gap: 40px;
   margin-top: 6px;
+
+  @include phone {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .fact {
@@ -102,6 +115,11 @@
   justify-content: center;
   gap: 24px;
   margin-top: 2px;
+
+  @include phone {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .giftValue {
@@ -114,6 +132,10 @@
   @include label;
   margin-top: 8px;
   padding-bottom: 4px;
+
+  @include phone {
+    padding: 10px 0 4px;
+  }
 }
 
 // --- RSVP: pure CSS state (radio + :has) so it works without JavaScript ------------
@@ -142,6 +164,10 @@
     padding: 10px 18px;
     border: 1px solid $ink;
     @include label(0.18em);
+
+    @include phone {
+      padding: 14px 18px; // 44px+ tap target
+    }
   }
 
   input:checked + span {
@@ -169,6 +195,11 @@
     min-width: 20px;
     padding: 10px 14px;
     text-align: center;
+
+    @include phone {
+      min-width: 24px;
+      padding: 14px 16px;
+    }
   }
 }
 
@@ -184,6 +215,10 @@
   @include label;
   padding-bottom: 4px;
   border-bottom: 1px solid $ink;
+
+  @include phone {
+    padding: 10px 0 4px;
+  }
 }
 
 // Dim until an option is chosen.

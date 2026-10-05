@@ -9,11 +9,19 @@
   bottom: calc(15vh - 0.4vw);
   display: flex;
   justify-content: center;
+
+  @include phone {
+    bottom: calc(11vh - 0.4vw);
+  }
 }
 
 .sway {
   position: relative;
   width: 460px;
+
+  @include phone {
+    width: min(300px, 80vw);
+  }
   transform-origin: 50% 77%;
 }
 

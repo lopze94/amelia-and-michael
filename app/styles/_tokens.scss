@@ -13,6 +13,12 @@ $display: 'EB Garamond', serif;
 
 $h2-size: clamp(32px, 4.4vw, 52px);
 
+@mixin phone {
+  @media (max-width: 600px) {
+    @content;
+  }
+}
+
 @mixin label($tracking: 0.24em) {
   font-size: 12px;
   letter-spacing: $tracking;

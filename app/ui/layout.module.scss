@@ -19,11 +19,24 @@
   gap: clamp(20px, 4vw, 56px);
   padding: 28px 20px;
   @include label;
+
+  @include phone {
+    flex-wrap: wrap;
+    gap: 2px 18px;
+    padding: 16px 12px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+  }
 }
 
 .navLink {
   padding: 6px 0;
   color: $ink;
+
+  @include phone {
+    padding: 10px 0; // a comfortable tap target
+  }
+
   opacity: 0.6;
   border-bottom: 1px solid transparent;
 
@@ -48,4 +61,13 @@
   box-sizing: border-box;
   padding: 24px 28px 40px;
   text-align: center;
+
+  @include phone {
+    top: clamp(88px, 14vh, 120px);
+    width: 100%;
+    padding: 16px 20px 32px;
+    // Never let tall content (the RSVP form) run off a short screen.
+    max-height: calc(100dvh - 88px);
+    overflow-y: auto;
+  }
 }
