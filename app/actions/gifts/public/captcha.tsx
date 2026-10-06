@@ -2,7 +2,10 @@ import { clientEntry, ref } from 'remix/component'
 import type { Handle } from 'remix/component'
 
 interface Turnstile {
-  render(node: HTMLElement, options: { sitekey: string; theme: string }): string
+  render(
+    node: HTMLElement,
+    options: { sitekey: string; theme: string; action: string },
+  ): string
   remove(widgetId: string): void
 }
 
@@ -28,7 +31,7 @@ function loadTurnstile() {
 // Renders the widget; Turnstile adds its `cf-turnstile-response` input to the surrounding form.
 export const Captcha = clientEntry(
   import.meta.url,
-  function Captcha(handle: Handle<{ siteKey: string }>) {
+  function Captcha(handle: Handle<{ siteKey: string; action: string }>) {
     return () => (
       <div
         mix={ref((node, signal) => {
@@ -36,7 +39,11 @@ export const Captcha = clientEntry(
           loadTurnstile().then(
             (turnstile) => {
               if (signal.aborted) return
-              widgetId = turnstile.render(node, { sitekey: handle.props.siteKey, theme: 'light' })
+              widgetId = turnstile.render(node, {
+                sitekey: handle.props.siteKey,
+                theme: 'light',
+                action: handle.props.action,
+              })
               signal.addEventListener('abort', () => turnstile.remove(widgetId!))
             },
             (error) => console.error(error),

@@ -1,7 +1,7 @@
 import type { Handle } from 'remix/component'
 
 import type { Invitation } from '../data/tables.ts'
-import { captchaSiteKey } from '../captcha.ts'
+import { CAPTCHA_ACTION, captchaSiteKey } from '../captcha.ts'
 import { giftCountries } from '../data/gifts.ts'
 import type { GiftCountry } from '../data/gifts.ts'
 import { formatDate, localizeHref, m } from '../i18n.ts'
@@ -220,7 +220,7 @@ export function GiftsPage(handle: Handle<GiftsPageProps>) {
               <h2 class={styles.heading}>{country.label()}</h2>
               <div class={styles.body}>{m.gifts_captcha_prompt()}</div>
               <input type="hidden" name="country" value={country.id} />
-              <Captcha siteKey={captchaSiteKey} />
+              <Captcha siteKey={captchaSiteKey} action={CAPTCHA_ACTION} />
               {error ? (
                 <div class={styles.error} role="alert">
                   {error}

@@ -70,6 +70,7 @@ never committed; they live in `/etc/wedding.env` on the droplet (as root):
 cat > /etc/wedding.env <<'EOF'
 TURNSTILE_SITE_KEY=...
 TURNSTILE_SECRET_KEY=...
+TURNSTILE_HOSTNAMES=ameliaandmichael.com,www.ameliaandmichael.com
 EOF
 chmod 600 /etc/wedding.env
 systemctl daemon-reload && systemctl restart wedding
