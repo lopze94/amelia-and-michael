@@ -7,6 +7,9 @@ import { join, relative } from 'node:path'
 import { transform } from 'lightningcss'
 import * as sass from 'sass'
 
+// Down-level modern CSS (inset, nesting, etc.) for older phones.
+const targets = { safari: 12 << 16, ios_saf: 12 << 16, chrome: 70 << 16 }
+
 const root = process.cwd()
 const appDir = join(root, 'app')
 const outFile = join(root, 'public/css/main.css')
@@ -32,6 +35,7 @@ function build() {
       filename: file,
       code: Buffer.from(compile(file)),
       cssModules: true,
+      targets,
     })
     css.push(result.code.toString())
 

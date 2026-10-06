@@ -67,6 +67,7 @@
     width: 100%;
     padding: 16px 20px 32px;
     // Never let tall content (the RSVP form) run off a short screen.
+    max-height: calc(100vh - 88px);
     max-height: calc(100dvh - 88px);
     overflow-y: auto;
   }
