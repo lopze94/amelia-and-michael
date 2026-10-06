@@ -27,7 +27,7 @@ export const giftCountries: GiftCountry[] = [
     label: m.gift_uk,
     options: [
       { name: m.gift_bank_transfer, lines: ['[00-00-00] · [número]'] },
-      { name: () => 'Revolut', href: 'https://revolut.me/[usuario]' },
+      { name: () => 'Revolut', href: 'https://revolut.me/smithmichael82' },
     ],
   },
   {
