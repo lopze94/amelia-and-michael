@@ -15,7 +15,6 @@ export const Car = clientEntry(import.meta.url, function Car() {
         <div class={styles.bumps} mix={ref((node, signal) => bumpRandomly(node, signal))}>
           <video
             class={styles.video}
-            src="/img/car.webm"
             autoplay
             loop
             muted
@@ -25,7 +24,11 @@ export const Car = clientEntry(import.meta.url, function Car() {
             playsInline
             aria-label="Los novios en un convertible clásico"
             mix={ref((video, signal) => keepPlaying(video, signal))}
-          />
+          >
+            {/* Safari only does alpha video as HEVC; everyone else gets VP9 WebM. */}
+            <source src="/img/car.mov" type='video/quicktime; codecs="hvc1"' />
+            <source src="/img/car.webm" type='video/webm; codecs="vp9"' />
+          </video>
         </div>
       </div>
     </div>
