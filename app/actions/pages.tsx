@@ -7,6 +7,7 @@ import type { GiftCountry } from '../data/gifts.ts'
 import { formatDate, localizeHref, m } from '../i18n.ts'
 import { routes } from '../routes.ts'
 import { Layout } from '../ui/layout.tsx'
+import { Captcha } from './gifts/public/captcha.tsx'
 import styles from './pages.module.scss.ts'
 
 // Pages pass `invited` to the Layout so it can show the Confirmar link.
@@ -219,12 +220,7 @@ export function GiftsPage(handle: Handle<GiftsPageProps>) {
               <h2 class={styles.heading}>{country.label()}</h2>
               <div class={styles.body}>{m.gifts_captcha_prompt()}</div>
               <input type="hidden" name="country" value={country.id} />
-              <div class="cf-turnstile" data-sitekey={captchaSiteKey} data-theme="light" />
-              <script
-                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-                async
-                defer
-              ></script>
+              <Captcha siteKey={captchaSiteKey} />
               {error ? (
                 <div class={styles.error} role="alert">
                   {error}
@@ -240,7 +236,7 @@ export function GiftsPage(handle: Handle<GiftsPageProps>) {
               <h2 class={styles.heading}>{country.label()}</h2>
               <div class={styles.giftOptions}>
                 {country.options.map((option) => (
-                  <div key={option.name()} class={styles.fact}>
+                  <div key={option.name()} class={`${styles.fact} ${styles.giftOption}`}>
                     {option.name()}
                     {option.lines ? (
                       <div class={`${styles.factValue} ${styles.giftValue}`}>

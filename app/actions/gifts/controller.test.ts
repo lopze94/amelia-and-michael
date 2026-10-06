@@ -36,7 +36,7 @@ describe('gifts', () => {
     let response = await get('?pais=uk')
     assert.equal(response.status, 200)
     let html = await response.text()
-    assert.match(html, /cf-turnstile/)
+    assert.match(html, /captcha/)
     assert.doesNotMatch(html, /Revolut/)
   })
 
