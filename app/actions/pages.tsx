@@ -1,7 +1,9 @@
 import type { Handle } from 'remix/component'
 
 import type { Invitation } from '../data/tables.ts'
-import { giftAccounts } from '../data/gifts.ts'
+import { captchaSiteKey } from '../captcha.ts'
+import { giftCountries } from '../data/gifts.ts'
+import type { GiftCountry } from '../data/gifts.ts'
 import { formatDate, localizeHref, m } from '../i18n.ts'
 import { routes } from '../routes.ts'
 import { Layout } from '../ui/layout.tsx'
@@ -173,27 +175,93 @@ export function InviteNotFoundPage() {
   )
 }
 
-export function GiftsPage(handle: Handle<PageProps>) {
-  return () => (
-    <Layout page="gifts" invited={handle.props.invited}>
-      <div class={styles.stack12}>
-        <h2 class={styles.heading}>{m.gifts_heading()}</h2>
-        <p class={`${styles.body} ${styles.giftsCopy}`}>
-          {m.gifts_copy()}
-        </p>
-        <div class={styles.gifts}>
-          {giftAccounts.map((account) => (
-            <div key={account.id} class={styles.fact}>
-              {account.label()}
-              <div class={`${styles.factValue} ${styles.giftValue}`}>
-                {[account.value].flat().map((line) => (
-                  <div key={line}>{line}</div>
+export interface GiftsPageProps extends PageProps {
+  step: 'pick' | 'captcha' | 'details'
+  country?: GiftCountry
+  error?: string
+}
+
+export function GiftsPage(handle: Handle<GiftsPageProps>) {
+  return () => {
+    let { invited, step, country, error } = handle.props
+    let giftsHref = localizeHref(routes.gifts.index.href())
+    let back = (
+      <a class={styles.link} href={giftsHref}>
+        {m.gifts_back()}
+      </a>
+    )
+    return (
+      <Layout page="gifts" invited={invited}>
+        <div class={styles.stack16}>
+          {step === 'pick' || !country ? (
+            <>
+              <h2 class={styles.heading}>{m.gifts_heading()}</h2>
+              <p class={`${styles.body} ${styles.giftsCopy}`}>{m.gifts_copy()}</p>
+              <div class={styles.label}>{m.gifts_where_from()}</div>
+              <div class={styles.choices}>
+                {giftCountries.map((option) => (
+                  <a
+                    key={option.id}
+                    class={styles.countryChoice}
+                    href={localizeHref(routes.gifts.index.href(null, { searchParams: { pais: option.id } }))}
+                  >
+                    {option.label()}
+                  </a>
                 ))}
               </div>
-            </div>
-          ))}
+            </>
+          ) : step === 'captcha' ? (
+            <form
+              class={styles.stack16}
+              method="post"
+              action={localizeHref(routes.gifts.action.href())}
+            >
+              <h2 class={styles.heading}>{country.label()}</h2>
+              <div class={styles.body}>{m.gifts_captcha_prompt()}</div>
+              <input type="hidden" name="country" value={country.id} />
+              <div class="cf-turnstile" data-sitekey={captchaSiteKey} data-theme="light" />
+              <script
+                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+                async
+                defer
+              ></script>
+              {error ? (
+                <div class={styles.error} role="alert">
+                  {error}
+                </div>
+              ) : null}
+              <button class={styles.submit} type="submit">
+                {m.gifts_show_details()}
+              </button>
+              {back}
+            </form>
+          ) : (
+            <>
+              <h2 class={styles.heading}>{country.label()}</h2>
+              <div class={styles.giftOptions}>
+                {country.options.map((option) => (
+                  <div key={option.name()} class={styles.fact}>
+                    {option.name()}
+                    {option.lines ? (
+                      <div class={`${styles.factValue} ${styles.giftValue}`}>
+                        {option.lines.map((line) => (
+                          <div key={line}>{line}</div>
+                        ))}
+                      </div>
+                    ) : null}
+                    {option.href ? (
+                      <a class={styles.link} href={option.href} rel="noopener noreferrer">
+                        {m.gifts_open_link()}
+                      </a>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+              {back}
+            </>
+          )}
         </div>
-      </div>
-    </Layout>
-  )
+      </Layout>
+    )
+  }
 }

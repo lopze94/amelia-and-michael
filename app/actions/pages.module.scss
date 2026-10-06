@@ -109,16 +109,26 @@
   color: $ink-deep;
 }
 
-.gifts {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: center;
-  gap: 24px;
-  margin-top: 2px;
+.giftOptions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.countryChoice {
+  display: block;
+  padding: 10px 18px;
+  border: 1px solid $ink;
+  @include label(0.18em);
+
+  &:hover {
+    background: $ink;
+    color: $paper;
+  }
 
   @include phone {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    padding: 14px 18px;
   }
 }
 

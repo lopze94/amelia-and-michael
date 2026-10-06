@@ -5,5 +5,5 @@ export const routes = route({
   home: '/',
   location: get('/ubicacion'),
   rsvp: form('/confirmar'),
-  gifts: get('/regalos'),
+  gifts: form('/regalos'),
 })

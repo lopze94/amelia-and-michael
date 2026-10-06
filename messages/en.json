@@ -39,5 +39,12 @@
   "gifts_copy": "If you wish to give us something, we would be grateful for a monetary contribution.",
   "gift_guatemala": "Guatemala",
   "gift_uk": "United Kingdom",
-  "gift_us": "United States"
+  "gift_us": "United States",
+  "gifts_where_from": "Where will you be sending from?",
+  "gifts_captcha_prompt": "Quick check that you're a person, then we'll show the details.",
+  "gifts_captcha_error": "The check didn't go through. Please try again.",
+  "gifts_show_details": "Show details",
+  "gifts_back": "Choose another country",
+  "gifts_open_link": "Open link",
+  "gift_bank_transfer": "Bank transfer"
 }

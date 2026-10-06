@@ -2,7 +2,7 @@ import { createController } from 'remix/router'
 
 import { assets } from '../assets.ts'
 import { routes } from '../routes.ts'
-import { GiftsPage, HomePage, LocationPage } from './pages.tsx'
+import { HomePage, LocationPage } from './pages.tsx'
 
 export default createController(routes, {
   actions: {
@@ -14,9 +14,6 @@ export default createController(routes, {
     },
     location(context) {
       return context.render(<LocationPage invited={!!context.invitation} />)
-    },
-    gifts(context) {
-      return context.render(<GiftsPage invited={!!context.invitation} />)
     },
   },
 })

@@ -12,7 +12,7 @@ const pageHref: Record<PageKey, string> = {
   home: routes.home.href(),
   location: routes.location.href(),
   rsvp: routes.rsvp.index.href(),
-  gifts: routes.gifts.href(),
+  gifts: routes.gifts.index.href(),
 }
 
 export interface LayoutProps {
@@ -37,7 +37,7 @@ export function Layout(handle: Handle<LayoutProps>) {
             },
           ]
         : []),
-      { key: 'gifts', label: m.nav_gifts(), href: localizeHref(routes.gifts.href()) },
+      { key: 'gifts', label: m.nav_gifts(), href: localizeHref(routes.gifts.index.href()) },
     ]
     // The same page in the other language; its own label is written in that language.
     let otherLocale = locales.find((locale) => locale !== getLocale())!

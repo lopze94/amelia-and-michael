@@ -39,5 +39,12 @@
   "gifts_copy": "Si deseas obsequiarnos algo, agradeceremos una contribución monetaria.",
   "gift_guatemala": "Guatemala",
   "gift_uk": "Reino Unido",
-  "gift_us": "Estados Unidos"
+  "gift_us": "Estados Unidos",
+  "gifts_where_from": "¿Desde dónde nos enviarás?",
+  "gifts_captcha_prompt": "Una verificación rápida de que eres una persona y te mostramos los datos.",
+  "gifts_captcha_error": "No se pudo completar la verificación. Inténtalo de nuevo.",
+  "gifts_show_details": "Mostrar datos",
+  "gifts_back": "Elegir otro país",
+  "gifts_open_link": "Abrir enlace",
+  "gift_bank_transfer": "Transferencia bancaria"
 }

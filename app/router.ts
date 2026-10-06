@@ -6,6 +6,7 @@ import { staticFiles } from 'remix/middleware/static'
 import { withLocale } from './i18n.ts'
 import { loadInvitation } from './middleware/invite.ts'
 import controller from './actions/controller.tsx'
+import giftsController from './actions/gifts/controller.tsx'
 import rsvpController from './actions/rsvp/controller.tsx'
 import { assets } from './assets.ts'
 import { routes } from './routes.ts'
@@ -34,6 +35,7 @@ const appRouter = createRouter<AppContext>({
 
 appRouter.map(routes, controller)
 appRouter.map(routes.rsvp, rsvpController)
+appRouter.map(routes.gifts, giftsController)
 
 // The public entry point: resolves the locale from the URL, then routes the Spanish path.
 export const router = { fetch: withLocale((request) => appRouter.fetch(request)) }

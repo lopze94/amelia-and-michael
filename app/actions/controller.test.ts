@@ -14,7 +14,7 @@ describe('root controller', () => {
   })
 
   it('serves every public page', async () => {
-    for (let href of [routes.location.href(), routes.gifts.href()]) {
+    for (let href of [routes.location.href(), routes.gifts.index.href()]) {
       let response = await router.fetch(new URL(href, 'http://localhost'))
       assert.equal(response.status, 200)
     }

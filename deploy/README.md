@@ -59,3 +59,11 @@ cd ~/amelia-and-michael && git pull && npm ci && sudo systemctl restart wedding
 ```
 
 (`deploy` needs sudo for that last step, or run it as root.) Logs: `journalctl -u wedding -f`.
+
+## Captcha keys (gifts page)
+
+The gifts page uses Cloudflare Turnstile. Create a free widget at
+https://dash.cloudflare.com/?to=/:account/turnstile for `ameliaandmichael.com`, then put the
+site key and secret key in `deploy/wedding.service` (`TURNSTILE_SITE_KEY`,
+`TURNSTILE_SECRET_KEY`) before `systemctl restart wedding`. In production without keys the
+gifts details are never shown.
