@@ -63,7 +63,16 @@ cd ~/amelia-and-michael && git pull && npm ci && sudo systemctl restart wedding
 ## Captcha keys (gifts page)
 
 The gifts page uses Cloudflare Turnstile. Create a free widget at
-https://dash.cloudflare.com/?to=/:account/turnstile for `ameliaandmichael.com`, then put the
-site key and secret key in `deploy/wedding.service` (`TURNSTILE_SITE_KEY`,
-`TURNSTILE_SECRET_KEY`) before `systemctl restart wedding`. In production without keys the
-gifts details are never shown.
+https://dash.cloudflare.com/?to=/:account/turnstile for `ameliaandmichael.com`. The keys are
+never committed; they live in `/etc/wedding.env` on the droplet (as root):
+
+```sh
+cat > /etc/wedding.env <<'EOF'
+TURNSTILE_SITE_KEY=...
+TURNSTILE_SECRET_KEY=...
+EOF
+chmod 600 /etc/wedding.env
+systemctl daemon-reload && systemctl restart wedding
+```
+
+In production without keys the gifts details are never shown.

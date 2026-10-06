@@ -8,8 +8,8 @@ WorkingDirectory=/home/deploy/amelia-and-michael
 Environment=PORT=44100
 Environment=TRUST_PROXY=1
 Environment=DATABASE_FILE=/var/lib/wedding/wedding.sqlite
-Environment=TURNSTILE_SITE_KEY=replace-me
-Environment=TURNSTILE_SECRET_KEY=replace-me
+# Secrets (TURNSTILE_SITE_KEY, TURNSTILE_SECRET_KEY) live only on the droplet; see deploy/README.md.
+EnvironmentFile=/etc/wedding.env
 ExecStart=/usr/bin/npm start
 Restart=always
 RestartSec=3
