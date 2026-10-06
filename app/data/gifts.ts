@@ -34,7 +34,7 @@ export const giftCountries: GiftCountry[] = [
     label: m.gift_us,
     options: [
       { name: () => 'Zelle', lines: () => ['Lopze.94@gmail.com'] },
-      { name: () => 'Venmo', lines: () => ['@josue_Lopez'] },
+      { name: () => 'Venmo', lines: () => ['@Josue_Lopez'] },
     ],
   },
 ]
