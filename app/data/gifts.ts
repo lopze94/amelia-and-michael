@@ -26,7 +26,6 @@ export const giftCountries: GiftCountry[] = [
     id: 'uk',
     label: m.gift_uk,
     options: [
-      { name: m.gift_bank_transfer, lines: () => ['[00-00-00] · [número]'] },
       { name: () => 'Revolut', href: 'https://revolut.me/smithmichael82' },
     ],
   },
@@ -34,8 +33,8 @@ export const giftCountries: GiftCountry[] = [
     id: 'us',
     label: m.gift_us,
     options: [
-      { name: () => 'Zelle', lines: () => ['lopze.94@gmail.com'] },
-      { name: () => 'Venmo', lines: () => ['@josue_lopez'] },
+      { name: () => 'Zelle', lines: () => ['Lopze.94@gmail.com'] },
+      { name: () => 'Venmo', lines: () => ['@josue_Lopez'] },
     ],
   },
 ]
