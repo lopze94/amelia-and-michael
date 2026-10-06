@@ -244,7 +244,7 @@ export function GiftsPage(handle: Handle<GiftsPageProps>) {
                     {option.name()}
                     {option.lines ? (
                       <div class={`${styles.factValue} ${styles.giftValue}`}>
-                        {option.lines.map((line) => (
+                        {option.lines().map((line) => (
                           <div key={line}>{line}</div>
                         ))}
                       </div>
