@@ -4,8 +4,16 @@ import type { Handle } from 'remix/component'
 interface Turnstile {
   render(
     node: HTMLElement,
-    options: { sitekey: string; theme: string; action: string },
+    options: {
+      sitekey: string
+      theme: string
+      action: string
+      callback?: (token: string) => void
+      'expired-callback'?: () => void
+      'error-callback'?: () => void
+    },
   ): string
+  reset(widgetId: string): void
   remove(widgetId: string): void
 }
 
@@ -36,6 +44,13 @@ export const Captcha = clientEntry(
       <div
         mix={ref((node, signal) => {
           let widgetId: string | undefined
+          // The server only ever sees a missing/invalid token when the box wasn't checked, and
+          // the re-rendered form can't be retried reliably, so keep submit off until we have one.
+          let submit = node.closest('form')?.querySelector<HTMLButtonElement>('button[type="submit"]')
+          let setReady = (ready: boolean) => {
+            if (submit) submit.disabled = !ready
+          }
+          setReady(false)
           loadTurnstile().then(
             (turnstile) => {
               if (signal.aborted) return
@@ -43,6 +58,12 @@ export const Captcha = clientEntry(
                 sitekey: handle.props.siteKey,
                 theme: 'light',
                 action: handle.props.action,
+                callback: () => setReady(true),
+                'expired-callback': () => setReady(false),
+                'error-callback': () => {
+                  setReady(false)
+                  if (widgetId) turnstile.reset(widgetId)
+                },
               })
               signal.addEventListener('abort', () => turnstile.remove(widgetId!))
             },
