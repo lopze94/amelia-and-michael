@@ -83,4 +83,26 @@ describe('i18n', () => {
       assert.match(page, i % 2 ? /Your presence is enough/ : /Tu presencia es suficiente/),
     )
   })
+
+  it('sends first-time English browsers to /en and then remembers the language', async () => {
+    let nav = (path: string, headers: Record<string, string>) =>
+      router.fetch(new Request(new URL(path, 'http://localhost'), { headers: { Accept: 'text/html', ...headers } }))
+
+    let en = await nav('/regalos', { 'Accept-Language': 'en-US,en;q=0.9,es;q=0.8' })
+    assert.equal(en.status, 302)
+    assert.equal(en.headers.get('Location'), '/en/gifts')
+    assert.match(en.headers.get('Set-Cookie')!, /lang=en/)
+
+    assert.equal((await nav('/regalos', { 'Accept-Language': 'es-GT,es;q=0.9,en;q=0.8' })).status, 200)
+    assert.equal((await nav('/regalos', { 'Accept-Language': 'fr' })).status, 200)
+    // Once a language cookie exists the switch link back to Spanish is respected.
+    assert.equal((await nav('/regalos', { 'Accept-Language': 'en', Cookie: 'lang=es' })).status, 200)
+  })
+
+  it('joins two names with "e" in Spanish when the second starts with i or y', async () => {
+    await db.create(invitations, { id: 'i18n2', name_1: 'Ana', name_2: 'Irene', guests: 2 })
+    let cookie = (await get('/regalos?invite=i18n2')).headers.get('Set-Cookie')!.split(';')[0]
+    assert.match(await html('/confirmar?gracias=1', cookie), /Ana e Irene/)
+    assert.match(await html('/en/rsvp?gracias=1', cookie), /Ana and Irene/)
+  })
 })

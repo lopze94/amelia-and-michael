@@ -15,7 +15,7 @@
   "location_access_value": "587 y 051",
   "location_open_maps": "Abrir en Maps",
   "rsvp_eyebrow": "RSVP",
-  "invitee_names": "{name_1} y {name_2}",
+  "invitee_names": "{name_1} {and} {name_2}",
   "rsvp_thanks_heading": "Gracias, {names}",
   "rsvp_thanks_declined": "Te extrañaremos — gracias por avisarnos.",
   "rsvp_thanks_accepted": "¡Nos encantará celebrar contigo!",

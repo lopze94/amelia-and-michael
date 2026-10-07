@@ -4,7 +4,7 @@ import type { Invitation } from '../data/tables.ts'
 import { CAPTCHA_ACTION, captchaSiteKey } from '../captcha.ts'
 import { giftCountries } from '../data/gifts.ts'
 import type { GiftCountry } from '../data/gifts.ts'
-import { formatDate, localizeHref, m } from '../i18n.ts'
+import { formatDate, getLocale, localizeHref, m } from '../i18n.ts'
 import { routes } from '../routes.ts'
 import { Layout } from '../ui/layout.tsx'
 import { Captcha } from './gifts/public/captcha.tsx'
@@ -69,7 +69,11 @@ export interface RsvpPageProps {
 
 const inviteeNames = (invitation: Invitation) =>
   invitation.name_2
-    ? m.invitee_names({ name_1: invitation.name_1, name_2: invitation.name_2 })
+    ? m.invitee_names({
+        name_1: invitation.name_1,
+        name_2: invitation.name_2,
+        and: getLocale() === 'en' ? 'and' : /^[iy]/i.test(invitation.name_2.trim()) ? 'e' : 'y',
+      })
     : invitation.name_1
 
 function choiceLabel(count: number, guests: number) {
