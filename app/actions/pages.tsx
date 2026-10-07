@@ -135,6 +135,7 @@ export function RsvpPage(handle: Handle<RsvpPageProps>) {
               action={localizeHref(routes.rsvp.action.href())}
             >
               <h2 class={styles.heading}>{inviteeNames(invitation)}</h2>
+              {answered ? <div class={styles.label}>{answerSummary(invitation)}</div> : null}
               <div class={styles.body}>{m.rsvp_confirm_attendance()}</div>
               {compact ? (
                 <div class={styles.stack12}>

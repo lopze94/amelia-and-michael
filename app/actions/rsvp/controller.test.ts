@@ -88,4 +88,14 @@ describe('rsvp', () => {
     assert.equal(row?.confirmed_guests, 1)
     assert.ok(row?.confirmed_at)
   })
+
+  it('shows an earlier answer on the form for anyone opening the link', async () => {
+    let before = await (await get(routes.rsvp.index.href(), def)).text()
+    assert.doesNotMatch(before, /invitados confirmados/)
+
+    await post({ guests: '1' }, def)
+    let page = await (await get(routes.rsvp.index.href(), def)).text()
+    assert.match(page, /<form/)
+    assert.match(page, /1\/1 invitados confirmados el /)
+  })
 })

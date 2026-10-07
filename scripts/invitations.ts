@@ -2,7 +2,7 @@
 //   node scripts/invitations.ts add "Amelia" "Michael" 2   (name 2 may be "" for one person)
 //   node scripts/invitations.ts list
 //   node scripts/invitations.ts import guests.csv [--replace]   (columns: name 1, name 2, guests)
-//   node scripts/invitations.ts export                          (CSV with ids, for the shared sheet)
+//   node scripts/invitations.ts export                          (CSV with ids, links and RSVP status)
 import { readFileSync } from 'node:fs'
 
 import { createId } from '@paralleldrive/cuid2'
@@ -72,8 +72,13 @@ if (command === 'add') {
   }
 } else if (command === 'export') {
   let rows = await db.query(invitations).orderBy('name_1').all()
-  console.log('id,name_1,name_2,guests,link')
-  for (let r of rows) console.log([r.id, r.name_1, r.name_2 ?? '', r.guests, link(r.id)].join(','))
+  console.log('id,name_1,name_2,guests,link,status,confirmed_guests,confirmed_at')
+  for (let r of rows) {
+    let status = r.confirmed_guests === null ? 'pending' : r.confirmed_guests === 0 ? 'declined' : 'confirmed'
+    console.log(
+      [r.id, r.name_1, r.name_2 ?? '', r.guests, link(r.id), status, r.confirmed_guests ?? '', r.confirmed_at ?? ''].join(','),
+    )
+  }
 } else if (command === 'list') {
   for (let row of await db.query(invitations).orderBy('name_1').all()) {
     let status =
