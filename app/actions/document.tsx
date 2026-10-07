@@ -31,7 +31,9 @@ export function Document(handle: Handle<DocumentProps>) {
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="color-scheme" content="light" />
+          <meta name="color-scheme" content="only light" />
+          <meta name="supported-color-schemes" content="light" />
+          <meta name="theme-color" content="#fcfcfa" />
           <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
           <title>{title}</title>
           {PRELOAD_FONTS.map((font) => (

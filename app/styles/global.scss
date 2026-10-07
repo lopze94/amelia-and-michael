@@ -33,12 +33,31 @@
   src: url('/fonts/jost.woff2') format('woff2');
 }
 
+// Always white, even with system dark mode or Android's forced dark (auto-darkening).
+:root {
+  color-scheme: only light;
+  background-color: $paper;
+  forced-color-adjust: none;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   background: $paper;
+  background-color: $paper;
+  color: $ink;
   overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  html,
+  body {
+    color-scheme: only light;
+    background-color: $paper;
+    color: $ink;
+  }
 }
 
 a {
