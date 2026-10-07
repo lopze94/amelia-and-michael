@@ -251,7 +251,14 @@ export function GiftsPage(handle: Handle<GiftsPageProps>) {
                       </div>
                     ) : null}
                     {option.href ? (
-                      <a class={styles.link} href={option.href} rel="noopener noreferrer">
+                      <a class={styles.payLink} href={option.href} rel="noopener noreferrer">
+                        {option.logo ? (
+                          <span
+                            class={styles.payLogo}
+                            style={{ '--logo': `url(${option.logo})` } as Record<string, string>}
+                            aria-hidden="true"
+                          />
+                        ) : null}
                         {m.gifts_open_link()}
                       </a>
                     ) : null}

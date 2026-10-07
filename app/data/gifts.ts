@@ -6,6 +6,8 @@ export interface GiftOption {
   lines?: () => string[]
   // A payment link, shown as a button instead of text.
   href?: string
+  // Brand mark shown inside the link button.
+  logo?: string
 }
 
 export interface GiftCountry {
@@ -26,7 +28,7 @@ export const giftCountries: GiftCountry[] = [
     id: 'uk',
     label: m.gift_uk,
     options: [
-      { name: () => 'Revolut', href: 'https://revolut.me/smithmichael82' },
+      { name: () => 'Revolut', href: 'https://revolut.me/smithmichael82', logo: '/img/revolut.svg' },
     ],
   },
   {

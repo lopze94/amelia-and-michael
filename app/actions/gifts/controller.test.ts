@@ -61,6 +61,7 @@ describe('gifts', () => {
     assert.equal(response.status, 200)
     let html = await response.text()
     assert.match(html, /Revolut/)
+    assert.match(html, /--logo: ?url\(\/img\/revolut\.svg\)/)
     assert.doesNotMatch(html, /Zelle/)
   })
 

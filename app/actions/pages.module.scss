@@ -122,6 +122,30 @@
   align-items: center;
 }
 
+.payLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 22px;
+  border: 1px solid $ink;
+  @include label(0.18em);
+
+  &:hover {
+    background: $ink;
+    color: $paper;
+  }
+}
+
+// The brand mark is a mask so it takes the text colour (including on hover).
+.payLogo {
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  mask: var(--logo) center / contain no-repeat;
+  -webkit-mask: var(--logo) center / contain no-repeat;
+}
+
 .countryChoice {
   display: block;
   padding: 10px 18px;
