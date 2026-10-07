@@ -35,12 +35,22 @@ export const Car = clientEntry(import.meta.url, function Car() {
   )
 })
 
-// iOS needs an explicit play() on mount and again on canplay.
+// iOS needs an explicit play() on mount and again once data arrives. Low Power Mode (and
+// some autoplay policies) reject it, so keep retrying on the first touch or scroll, and
+// whenever the video gets paused or the tab comes back.
 function keepPlaying(video: HTMLVideoElement, signal: AbortSignal) {
   video.muted = true
-  let play = () => void video.play().catch(() => {})
+  let play = () => {
+    if (!video.paused) return
+    video.play().catch(() => {})
+  }
   play()
-  video.addEventListener('canplay', play, { once: true, signal })
+  for (let type of ['loadedmetadata', 'loadeddata', 'canplay', 'pause', 'suspend'])
+    video.addEventListener(type, play, { signal })
+  for (let type of ['touchstart', 'pointerdown', 'scroll', 'click', 'keydown'])
+    window.addEventListener(type, play, { signal, passive: true, capture: true })
+  document.addEventListener('visibilitychange', play, { signal })
+  window.addEventListener('pageshow', play, { signal })
 }
 
 // Accelerating and braking: the car drifts to a new random spot (random distance, random
