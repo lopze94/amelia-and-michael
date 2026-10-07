@@ -105,4 +105,15 @@ describe('i18n', () => {
     assert.match(await html('/confirmar?gracias=1', cookie), /Ana e Irene/)
     assert.match(await html('/en/rsvp?gracias=1', cookie), /Ana and Irene/)
   })
+
+  it('has link-preview tags with absolute urls per language', async () => {
+    let es = await html('/ubicacion')
+    assert.match(es, /property="og:image" content="https:\/\/ameliaandmichael\.com\/img\/og\.png"/)
+    assert.match(es, /rel="canonical" href="https:\/\/ameliaandmichael\.com\/ubicacion"/)
+    assert.match(es, /hreflang="en" href="https:\/\/ameliaandmichael\.com\/en\/location"/)
+
+    let en = await html('/en/location')
+    assert.match(en, /property="og:locale" content="en_GB"/)
+    assert.match(en, /Friday, November 27, 2026/)
+  })
 })
